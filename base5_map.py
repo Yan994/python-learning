@@ -58,21 +58,27 @@ def not_empty(s):
     return s and s.strip()
 list(filter(not_empty,['a','b',None,'c','']))   #['a', 'b', 'c']
 
-'a' and 'b'   #'b'
+# x or y      if x is false, then y, else x
+# x and y     if x is false, then x, else y
+# not x       if x is false, then True, else False
+
+'a' and 'b'   #'b'    
 'b' and 'a'   #'a'
 'a' and None   #
-None and 'a'   #
+0 and 'a'   #0
 'b' or 'a'   #'b'
 None or 'a'   #'a'
 1<2 and 2<3   #True
 
-#生成素数
+#生成素数（质数）
 
+#首先返回奇数，因为偶数总能被2整除
 def _odd_iter():
-    n=3
+    n=1
     while True:
         n+=2
         yield n
+#不能被奇数整除的就是素数
 def _not_divisible(n):
     return lambda x:x%n>0
 def primes():
@@ -83,34 +89,45 @@ def primes():
         yield n
         it=filter(_not_divisible(n),it)   #构造新序列
 for n in primes():
-    if n<=1000:
+    if n<=100:
         print(n)
     else:
         break
+    
 #将数字倒过来的字符串
+        
 str(123)[::-1]   #'321'
+
 #判断数字是否为回数，即121,12321
+
 def is_palindrome(n):
     return str(n)==str(n)[::-1]
 list(filter(is_palindrome,range(1000)))
 
-#sorted 对list排序
+#sorted 对list排序，从低到高
+
 sorted([3,6,1,7,-5])   #[-5, 1, 3, 6, 7]
 sorted([3,6,1,7,-5],key=abs)   #[1, 3, -5, 6, 7]
 sorted(['bob', 'about', 'Zoo', 'Credit'])   #['Credit', 'Zoo', 'about', 'bob']
 sorted(['bob', 'about', 'Zoo', 'Credit'],key=str.lower)   #['about', 'bob', 'Credit', 'Zoo']
+
 #对tuple排名
+
 L=[('Bob', 75), ('Adam', 92), ('Bart', 66), ('Lisa', 88)]
 #按姓名
 def by_name(t):
     return t[0].lower()
 sorted(L,key=by_name)
+L[0][0]   #'Bob'
+
 #按成绩从高到低
+
 def by_grade(t):
     return -t[-1]   #取个相反数
 sorted(L,key=by_grade)
 
-#返回函数
+#返回函数，将函数作为结果返回
+
 def createCounter(): #外部函数
     n=0
     def counter():   #内部函数
@@ -119,20 +136,27 @@ def createCounter(): #外部函数
         return n
     return counter   #返回的是个函数
 counterA=createCounter()
+#多次调用内部函数，改变了外部函数参数
 print(counterA(),counterA(),counterA())   #1 2 3
+#重新调用内部函数
 counterB=createCounter()
 print(counterB())   #1
 
 # f._name_  取函数的名字
 
 #lambda匿名函数
+
 lambda x:x*x   #这是一个函数
 f=lambda x:x*x
 f(6)   #36
 list(filter(lambda n:n%2 ==1,range(1,11)))   #[1, 3, 5, 7, 9]
 
+
+
 #装饰器
+
 import functools,time
+#定义装饰器
 def log(func):
     def wrapper(*args,**kw):
         print('call %s():' % func.__name__)
@@ -155,6 +179,7 @@ def metric(fn):
         print('%s executed in %s ms' % (fn.__name__,end-start))
         print('end call')
     return wrapper
+
 @metric
 def fast(x,y):
     time.sleep(0.0012)
@@ -166,19 +191,31 @@ begin call fast():
 fast executed in 0.0020024776458740234 ms
 end call
 '''
+
+
+
 #转二进制
+
 int('10111010',base=2)   #186
+
 #functools.partial帮助创建一个偏函数，即固定已有函数的某些参数
+
 import functools
+
 int2=functools.partial(int,base=2)   #定义函数
+
 int2('11010010')   #210
 int2('11010010',base=8)   #2363400
+
 #选出数列中的最大值，若小于10则输出10
+
 max10=functools.partial(max,10)
 max10(1,3,5,4)   #10
 
 #针对二进制
+
 #输入一个整数，输出该数二进制表示中1的个数。其中负数用补码表示。
+
 5>>0   #5
 [(5>>i & 1) for i in range(0,32)]   #[1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0] #32个
 #取反 ~  按位与 &   或 |   异或 ^    左移 <<   右移 >> 
